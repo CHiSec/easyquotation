@@ -11,6 +11,15 @@ def update_stock_codes():
     """获取所有股票 ID 到 all_stock_code 目录下"""
     response = requests.get("http://www.shdjt.com/js/lib/astock.js")
     stock_codes = re.findall(r"~([a-z0-9]*)`", response.text)
+
+    # 增加可轉債
+    response = requests.post("https://www.jisilu.cn/data/cbnew/cb_list/", data={
+        "btype": "C",
+        "listed": "Y",
+        "is_search": "N",
+    })
+    stock_codes.extend(map(lambda row: row['id'], response.json()['rows']))
+
     with open(STOCK_CODE_PATH, "w") as f:
         f.write(json.dumps(dict(stock=stock_codes)))
     return stock_codes
