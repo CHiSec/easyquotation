@@ -9,8 +9,8 @@ STOCK_CODE_PATH = os.path.join(os.path.dirname(__file__), "stock_codes.conf")
 
 def update_stock_codes():
     """获取所有股票 ID 到 all_stock_code 目录下"""
-    response = requests.get("http://www.shdjt.com/js/lib/astock.js")
-    stock_codes = re.findall(r"~([a-z0-9]*)`", response.text)
+    # response = requests.get("http://www.shdjt.com/js/lib/astock.js")
+    # stock_codes = re.findall(r"~([a-z0-9]*)`", response.text)
 
     # 增加可轉債
     response = requests.post("https://www.jisilu.cn/data/cbnew/cb_list/", data={
@@ -18,7 +18,8 @@ def update_stock_codes():
         "listed": "Y",
         "is_search": "N",
     })
-    stock_codes.extend(map(lambda row: row['id'], response.json()['rows']))
+    # stock_codes.extend(map(lambda row: row['id'], response.json()['rows']))
+    stock_codes = list(map(lambda row: row['id'], response.json()['rows']))
 
     with open(STOCK_CODE_PATH, "w") as f:
         f.write(json.dumps(dict(stock=stock_codes)))
