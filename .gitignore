@@ -77,3 +77,4 @@ tmp/
 secrets/
 
 venv
+.DS_Store
